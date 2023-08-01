@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "efficiency",
+  "version": "${version}",
+  "name": "Efficiency",
+  "description": "Install mods from Modrinth in the blink of an eye with Efficiency!",
+  "authors": [
+    "KyaniteMods"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/efficiency/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.kyanite.efficiency.client.EfficiencyClient"
+    ],
+    "main": [
+      "com.kyanite.efficiency.Efficiency"
+    ]
+  },
+  "mixins": [
+    "efficiency.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.21",
+    "fabric": "*",
+    "minecraft": "1.20.1"
+  }
+}
