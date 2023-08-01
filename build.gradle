@@ -8,6 +8,7 @@ group = project.maven_group
 
 repositories {
     maven { url 'https://maven.wispforest.io' }
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
@@ -17,6 +18,8 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    implementation 'com.github.masecla22:Modrinth4J:master-SNAPSHOT'
 }
 
 processResources {

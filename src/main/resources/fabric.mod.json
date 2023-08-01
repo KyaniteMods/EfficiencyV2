@@ -12,9 +12,6 @@
   "icon": "assets/efficiency/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [
-      "com.kyanite.efficiency.client.EfficiencyClient"
-    ],
     "main": [
       "com.kyanite.efficiency.Efficiency"
     ]

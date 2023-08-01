@@ -1,5 +1,6 @@
 package com.kyanite.efficiency.screen.widgets.sidebar;
 
+import masecla.modrinth4j.model.tags.Category;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Checkbox;
@@ -11,10 +12,15 @@ import org.apache.commons.lang3.StringUtils;
 public class ModSidebarEntry extends ObjectSelectionList.Entry<ModSidebarEntry> {
     public final Checkbox checkbox;
     private final ModSidebar sidebar;
+    public final Category category;
     public boolean wasSelected = false;
-    public ModSidebarEntry(ModSidebar sidebar) {
+    public ModSidebarEntry(ModSidebar sidebar, Category category) {
         this.sidebar = sidebar;
-        this.checkbox = new Checkbox(25, 0, 20, 20, Component.literal("Test " + RandomSource.create().nextInt(0, 10)), false);
+        this.category = category;
+        this.checkbox = new Checkbox(5, 0, 20, 20, Component.literal(
+                category.getName().equals("game-mechanics") ? "Mechanics" :
+                        category.getName().equals("transportation") ? "Mobility" :
+                        StringUtils.capitalize(category.getName())), false);
     }
 
 
@@ -34,6 +40,9 @@ public class ModSidebarEntry extends ObjectSelectionList.Entry<ModSidebarEntry> 
     public void render(GuiGraphics guiGraphics, int i, int j, int k, int l, int m, int n, int o, boolean bl, float f) {
         if(this.wasSelected != this.checkbox.selected()) {
             this.wasSelected = this.checkbox.selected();
+            if(this.checkbox.selected()) {
+                this.sidebar.browserScreen.modList.facets = this.sidebar.getFacets();
+            }
         }
 
         this.checkbox.setY(j);

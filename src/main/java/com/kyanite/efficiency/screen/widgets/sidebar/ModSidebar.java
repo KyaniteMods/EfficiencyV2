@@ -1,20 +1,47 @@
 package com.kyanite.efficiency.screen.widgets.sidebar;
 
+import com.kyanite.efficiency.Efficiency;
 import com.kyanite.efficiency.screen.EfficiencyBrowserScreen;
 import com.mojang.blaze3d.vertex.PoseStack;
+import masecla.modrinth4j.model.project.ProjectType;
+import masecla.modrinth4j.model.search.Facet;
+import masecla.modrinth4j.model.search.FacetCollection;
+import masecla.modrinth4j.model.tags.Category;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.screens.TitleScreen;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ModSidebar extends ObjectSelectionList<ModSidebarEntry> {
     public EfficiencyBrowserScreen browserScreen;
+    private List<Category> currentlyDisplayedCategories = new ArrayList<>();
     public ModSidebar(EfficiencyBrowserScreen browserScreen, Minecraft minecraft, int i, int j, int k, int l, int m) {
         super(minecraft, i, j, k, l, m);
-        this.x0 = 5;
+        //this.x0 = 5;
         this.y0 = 5;
         this.browserScreen = browserScreen;
-        for (int i3 = 0; i3 < 10; i3++) {
-            ModSidebarEntry entry = new ModSidebarEntry(this);
+
+        try {
+            refreshCategories();
+        } catch (ExecutionException | InterruptedException e) {
+            Efficiency.LOGGER.info(e.toString());
+            minecraft.setScreen(new TitleScreen());
+        }
+    }
+
+    public void refreshCategories() throws ExecutionException, InterruptedException {
+        for (Category category : Efficiency.dataCollector.getCategories())
+            if(category.getProjectType() != null && category.getProjectType().equals(ProjectType.MOD)) this.currentlyDisplayedCategories.add(category);
+
+        this.clearEntries();
+        if (this.currentlyDisplayedCategories == null) return;
+
+        for (Category category : this.currentlyDisplayedCategories) {
+            ModSidebarEntry entry = new ModSidebarEntry(this, category);
             this.addEntry(entry);
         }
     }
@@ -44,6 +71,16 @@ public class ModSidebar extends ObjectSelectionList<ModSidebarEntry> {
             filterEntry.checkbox.mouseClicked(d, e, i);
         }
         return false;
+    }
+
+    public FacetCollection getFacets() {
+        List<ModSidebarEntry> activatedCategories = children().stream().filter(modFilterEntry -> modFilterEntry.checkbox.selected()).toList();
+        if(activatedCategories.stream().count() < 1) return null;
+        FacetCollection facetCollection = new FacetCollection();
+        for(ModSidebarEntry filterEntry : activatedCategories) {
+            facetCollection.addPossibleConditions(Facet.category(filterEntry.category.getName()));
+        }
+        return facetCollection;
     }
 
     @Override

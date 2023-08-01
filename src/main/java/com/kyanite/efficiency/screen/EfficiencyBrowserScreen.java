@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.*;
+import java.util.concurrent.ExecutionException;
 
 public class EfficiencyBrowserScreen extends Screen {
     private final Screen parent;
@@ -37,12 +38,18 @@ public class EfficiencyBrowserScreen extends Screen {
 
         this.searchBox = new EditBox(this.font, this.minecraft.screen.width - 260, 15, 200, 20, this.searchBox, Component.translatable("selectWorld.search"));
         ImageButton searchButton = new ImageButton(this.width - 53, 15, 20, 20, 0, 0, 20, new ResourceLocation(Efficiency.MOD_ID, "textures/gui/search-button.png"), 32, 64, button -> {
+            this.modList.filter = this.searchBox.getValue();
+            try {
+                this.modList.refreshMods();
+            } catch (ExecutionException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         });
         ImageButton backButton = new ImageButton(this.width - 30, 15, 20, 20, 0, 0, 20, new ResourceLocation(Efficiency.MOD_ID, "textures/gui/back-button.png"), 32, 64, button -> {
             this.minecraft.setScreen(this.parent);
         });
 
-        this.modList = new ModList(this.minecraft, this.width / 2 + 500, this.height, 48, this.height - 5, 36);
+        this.modList = new ModList(this, this.minecraft, this.width / 2 + 500, this.height, 48, this.height - 5, 36);
         this.sideBar = new ModSidebar(this, this.minecraft, 100, this.height, 48, this.height - 5, 25);
 
         this.addRenderableWidget(searchButton);
@@ -54,7 +61,7 @@ public class EfficiencyBrowserScreen extends Screen {
 
     @Override
     public boolean shouldCloseOnEsc() {
-        return false;
+        return true;
     }
 
     @Override
