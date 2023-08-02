@@ -1,0 +1,10 @@
+{
+  "efficiency.browse_mods": "Browse Mods",
+  "efficiency.filters": "Filters",
+  "efficiency.clear_filters": "Clear Filters",
+
+  "efficiency.mod_count": "Showing %s mods",
+  "efficiency.no_mods": "Could not find any mods.",
+  "efficiency.slug_tooltip": "Mod ID: %s",
+  "efficiency.mod_supports": "This mod supports %s"
+}

@@ -1,9 +1,11 @@
-package com.kyanite.efficiency;
+package com.kyanite.efficiency.utility;
 
 import masecla.modrinth4j.endpoints.SearchEndpoint;
+import masecla.modrinth4j.endpoints.version.GetProjectVersions;
 import masecla.modrinth4j.main.ModrinthAPI;
 import masecla.modrinth4j.model.project.Project;
 import masecla.modrinth4j.model.tags.Category;
+import masecla.modrinth4j.model.version.ProjectVersion;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -17,6 +19,11 @@ public class ModrinthDataCollector {
 
     public List<Category> getCategories() throws ExecutionException, InterruptedException {
         CompletableFuture<List<Category>> categoriesAsync = client.tags().getCategories();
+        return categoriesAsync.get();
+    }
+
+    public List<ProjectVersion> getVersions(String slug) throws ExecutionException, InterruptedException {
+        CompletableFuture<List<ProjectVersion>> categoriesAsync = client.versions().getProjectVersions(slug, GetProjectVersions.GetProjectVersionsRequest.builder().build());
         return categoriesAsync.get();
     }
 

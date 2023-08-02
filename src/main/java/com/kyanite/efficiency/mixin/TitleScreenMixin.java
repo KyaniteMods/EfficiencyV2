@@ -20,7 +20,7 @@ public class TitleScreenMixin extends Screen {
     public void addButton(CallbackInfo ci) {
         int l =  this.height / 4 + 48;
 
-        this.addRenderableWidget(Button.builder(Component.literal("Browse Mods"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.translatable("efficiency.browse_mods"), (button) -> {
             this.minecraft.setScreen(new EfficiencyBrowserScreen(this));
         }).bounds(this.width / 2 - 100, l + 72 + 35, 200, 20).build());
     }

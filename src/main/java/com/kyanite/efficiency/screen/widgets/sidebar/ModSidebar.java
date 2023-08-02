@@ -10,10 +10,13 @@ import masecla.modrinth4j.model.tags.Category;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
+import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.client.gui.screens.TitleScreen;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class ModSidebar extends ObjectSelectionList<ModSidebarEntry> {
@@ -21,24 +24,28 @@ public class ModSidebar extends ObjectSelectionList<ModSidebarEntry> {
     private List<Category> currentlyDisplayedCategories = new ArrayList<>();
     public ModSidebar(EfficiencyBrowserScreen browserScreen, Minecraft minecraft, int i, int j, int k, int l, int m) {
         super(minecraft, i, j, k, l, m);
-        //this.x0 = 5;
-        this.y0 = 5;
+        this.x0 = 5;
+        this.y0 = 20;
         this.browserScreen = browserScreen;
 
         try {
             refreshCategories();
         } catch (ExecutionException | InterruptedException e) {
             Efficiency.LOGGER.info(e.toString());
-            minecraft.setScreen(new TitleScreen());
         }
     }
 
     public void refreshCategories() throws ExecutionException, InterruptedException {
-        for (Category category : Efficiency.dataCollector.getCategories())
-            if(category.getProjectType() != null && category.getProjectType().equals(ProjectType.MOD)) this.currentlyDisplayedCategories.add(category);
-
         this.clearEntries();
         if (this.currentlyDisplayedCategories == null) return;
+        this.currentlyDisplayedCategories.clear();
+
+        try {
+            for (Category category : Efficiency.dataCollector.getCategories())
+                if (category.getProjectType() != null && category.getProjectType().equals(ProjectType.MOD))
+                    this.currentlyDisplayedCategories.add(category);
+        } catch (ExecutionException | InterruptedException e) {
+        }
 
         for (Category category : this.currentlyDisplayedCategories) {
             ModSidebarEntry entry = new ModSidebarEntry(this, category);

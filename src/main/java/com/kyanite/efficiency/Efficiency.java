@@ -1,10 +1,16 @@
 package com.kyanite.efficiency;
 
+import com.kyanite.efficiency.utility.ModrinthDataCollector;
 import masecla.modrinth4j.client.agent.UserAgent;
 import masecla.modrinth4j.main.ModrinthAPI;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.util.FormattedCharSequence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 
 public class Efficiency implements ModInitializer {
     public static final String MOD_ID = "efficiency";
